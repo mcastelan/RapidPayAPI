@@ -10,16 +10,15 @@ using RapidPayAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
  if(builder.Environment.IsProduction())
  {
-Console.WriteLine("-->using  Sql Db");
-builder.Services.AddDbContext<AppDbContext>(opt =>
-opt.UseSqlServer(builder.Configuration.GetConnectionString("RapidPayConn")))
-.AddIdentityCore<User>()
-.AddRoles<IdentityRole>()
-.AddEntityFrameworkStores<AppDbContext>();
+    Console.WriteLine("-->using  Sql Db");
+    builder.Services.AddDbContext<AppDbContext>(opt =>
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("RapidPayConn")))
+    .AddIdentityCore<User>()
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>();
 
 
 
@@ -60,6 +59,15 @@ builder.Services.AddSingleton<UFEService>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddControllers();
+
+var frontendurl = builder.Configuration.GetValue<string>("frontend_url");
+builder.Services.AddCors(options=>{
+    options.AddDefaultPolicy(builder=>{
+        builder.WithOrigins(frontendurl).AllowAnyMethod().AllowAnyHeader();
+    });
+});
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
@@ -105,6 +113,8 @@ if (app.Environment.IsDevelopment())
 
 
 app.UseHttpsRedirection();
+app.UseRouting();
+app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

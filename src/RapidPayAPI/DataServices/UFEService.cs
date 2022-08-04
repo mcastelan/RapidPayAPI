@@ -41,7 +41,7 @@ namespace RapidPayAPI.Services
             while (await _timer.WaitForNextTickAsync())
             {
                   var rndBetween0And2 = random.Next(0, 20);  
-                feeDecimal = rndBetween0And2*0.1m;
+                feeDecimal = rndBetween0And2*0.01m;
                 
                 feeRate = feeRate*feeDecimal;
                 _logger.LogInformation($"Fee Decimal - {feeDecimal}, Fee Rate - {feeRate}");

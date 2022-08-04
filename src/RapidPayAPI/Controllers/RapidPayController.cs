@@ -105,19 +105,20 @@ namespace RapidPayAPI.Controllers
                 return NotFound();
             }
             var balanceBeforePay= bankAccount.Balance;
+            if(_ufeService.LastFeeRate==0)
+            {
+                //Set the initial fee rate. In real word, the UFE service provide a initial fee 
+                _ufeService.LastFeeRate = (bankAccount.Balance/(bankAccount.Balance+bankAccountPayDto.Amount))*.01m;
+            }
             if(bankAccountPayDto.PayType==PayType.Deposit)
             {
-                if(_ufeService.LastFeeRate==0)
-                    _ufeService.LastFeeRate = bankAccount.Balance/(bankAccount.Balance+bankAccountPayDto.Amount);
-                
+                             
                 bankAccount.Balance+=bankAccountPayDto.Amount;
                 
             }
             else if(bankAccountPayDto.PayType == PayType.Withdraw)
             {
-                if(_ufeService.LastFeeRate==0)
-                    _ufeService.LastFeeRate = bankAccount.Balance/(bankAccount.Balance+bankAccountPayDto.Amount);
-                
+                             
                 bankAccount.Balance-=bankAccountPayDto.Amount;
             }
             else
@@ -132,16 +133,16 @@ namespace RapidPayAPI.Controllers
 
             //Creating Payment History
             paymentHistory.BalanceBeforePayment = balanceBeforePay;
-            paymentHistory.BalanceAfterPayment = 
+            paymentHistory.BalanceAfterPayment = bankAccount.Balance;
             paymentHistory.FeeAmountApplied = feeRateAmountApplied;
             paymentHistory.FeeRate = _ufeService.LastFeeRate;
             paymentHistory.PaymentAmount = bankAccountPayDto.Amount;
-
+            paymentHistory.InsDateTime = DateTimeOffset.UtcNow;
            
          
              try
              {
-             _logger.LogDebug($"LastFeeRate={_ufeService.LastFeeRate}, LastFeeAmountApplied = {feeRateAmountApplied}");
+             _logger.LogInformation($"LastFeeRate={_ufeService.LastFeeRate}, LastFeeAmountApplied = {feeRateAmountApplied}");
             _repository.UpdateBankAccount(bankAccount);
              paymentHistory.BankAccountId = bankAccount.Id;
              _repository.CreatePaymentHistory(paymentHistory);

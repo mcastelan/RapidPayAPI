@@ -28,5 +28,8 @@ namespace RapidPayAPI.Models
        [Required]
         public decimal PaymentAmount{get;set;}
 
+        [Required]
+        public DateTimeOffset InsDateTime{get;set;}
+
     }
 }
