@@ -1,4 +1,4 @@
-# RapidPayAPI
+# RapidPayAPI (Challenge)
 ## Goal
 
 RapidPay as a payment provider needs YOU to develop its new Authorization system and is willing to
@@ -100,7 +100,7 @@ dotnet run --launch-profile "RapidPayAPI-Production"
 | ------ | ------ | ------ | ------ |
 | POST | /api/Authentication/login | Authentication and Create | Create a user token |
 
-# RapidPay Endpoints
+## RapidPay Endpoints
 | Verb | URI | Operation | Description |
 | ------ | ------ | ------ | ------ |
 | GET | /api/RapidPay/GetAllBankAccounts | Read | Read all bank accounts |
