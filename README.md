@@ -83,14 +83,14 @@ to :
 // //Seed Identity Data In Production Environment
 // await SeedIdentityData();
 ```
-- In order to setup your production database, you can use dotnet ef cli for add a migration and update your database.
+- In order to setup your production database, you can use dotnet ef cli for add a migration and update your database:
 
 ```sh
 dotnet ef migrations add InitialMigration
 dotnet ef database update
 ```
 
-- Revert the code changes and Finally 
+- Revert the code changes and run the production profile: 
 ```sh
 dotnet run --launch-profile "RapidPayAPI-Production"
 ```
