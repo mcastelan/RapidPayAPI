@@ -8,7 +8,7 @@ namespace RapidPayAPI.Services
 
     public class UFEService :IDisposable
     {
-        private decimal feeRate=0.0m;
+        private decimal feeRate=0.01m;//In real world, the UFE service provide a real initial fee rate
         private decimal feeDecimal;
         private PeriodicTimer _timer;
         Random random = new Random();
@@ -16,7 +16,7 @@ namespace RapidPayAPI.Services
 
         public  decimal LastFeeRate{
             get{return feeRate;}
-            set{feeRate=value;}
+            
         }
         
         

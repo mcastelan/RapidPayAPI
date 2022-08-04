@@ -108,7 +108,7 @@ dotnet run --launch-profile "RapidPayAPI-Production"
 | GET | /api/RapidPay/GetBankAccountById/{bankaccountid} | Read | Read a single bank account(by id) |
 | GET | /api/RapidPay/GetBalance/{bankaccountid} | Read | Read the balance of a single bank account(by id) |
 | POST | /api/RapidPay/CreateBankAccount | Create | Create a new bank account |
-| PUT | /api/RapidPay/Pay | Update | Update the balance of a single bank account(by card number,payment type and amount ) |
+| PUT | /api/RapidPay/Pay/{bankaccountid} | Update | Update the balance of a single bank account(by id) |
 
 
 

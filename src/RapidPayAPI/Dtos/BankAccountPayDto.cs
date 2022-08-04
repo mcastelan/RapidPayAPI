@@ -4,8 +4,7 @@ namespace RapidPayAPI.Dtos
 {
     public class BankAccountPayDto{
          
-         [Required]
-         public string CardNumber { get; set; } 
+         
 
        
        [Required]

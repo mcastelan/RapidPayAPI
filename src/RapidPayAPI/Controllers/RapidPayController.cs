@@ -94,22 +94,18 @@ namespace RapidPayAPI.Controllers
             
         }
 
-        [HttpPut()]
-        public async Task<ActionResult> Pay(BankAccountPayDto bankAccountPayDto)
+        [HttpPut("{bankaccountid}")]
+        public async Task<ActionResult> Pay(int bankaccountid, BankAccountPayDto bankAccountPayDto)
         {
            
            var paymentHistory = new PaymentHistory(); 
-            var bankAccount = _repository.GetBankAccountByCardNumber(bankAccountPayDto.CardNumber);
+            var bankAccount = _repository.GetBankAccountById(bankaccountid);//GetBankAccountByCardNumber(bankAccountPayDto.CardNumber);
             if (bankAccount == null)
             {
                 return NotFound();
             }
             var balanceBeforePay= bankAccount.Balance;
-            if(_ufeService.LastFeeRate==0)
-            {
-                //Set the initial fee rate. In real word, the UFE service provide a initial fee 
-                _ufeService.LastFeeRate = (bankAccount.Balance/(bankAccount.Balance+bankAccountPayDto.Amount))*.01m;
-            }
+            
             if(bankAccountPayDto.PayType==PayType.Deposit)
             {
                              
@@ -123,7 +119,7 @@ namespace RapidPayAPI.Controllers
             }
             else
             {
-                 return NotFound();
+                 return BadRequest("Invalid Payment Type");
             }
             var feeRateAmountApplied = bankAccountPayDto.Amount*_ufeService.LastFeeRate;
           
