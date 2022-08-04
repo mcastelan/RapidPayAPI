@@ -39,40 +39,86 @@ namespace RapidPayAPI.Data
 
             }
         }
+        
+public async static  Task SeedIdentityData(IApplicationBuilder applicationBuilder)
+{
+    var scopeFactory = applicationBuilder!.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
+    using var scope = scopeFactory.CreateScope();
 
-        private async static void SeedIdentityData(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, ILogger<Program> logger)
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+
+    //context.Database.EnsureCreated();
+
+    if (!userManager.Users.Any())
+    {
+        logger.LogInformation("Creating test user");
+
+        var newUser = new User
         {
-            if (!userManager.Users.Any())
-            {
-                logger.LogInformation("Creating test user");
+            Email = "mcastelan@rapidpay.com",
+            FirstName = "Test",
+            LastName = "User",
+            UserName = "mcastelan.rapidpay"
+        };
 
-                var newUser = new User
-                {
-                    Email = "mcastelan@rapidpay.com",
-                    FirstName = "Test",
-                    LastName = "User",
-                    UserName = "mcastelan.rapidpay"
-                };
+        await userManager.CreateAsync(newUser, "P@55.W0rd");
+        await roleManager.CreateAsync(new IdentityRole
+        {
+            Name = "Admin"
+        });
+        await roleManager.CreateAsync(new IdentityRole
+        {
+            Name = "AnotherRole"
+        });
 
-                await userManager.CreateAsync(newUser, "P@55.W0rd");
-                await roleManager.CreateAsync(new IdentityRole
-                {
-                    Name = "Admin"
-                });
-                await roleManager.CreateAsync(new IdentityRole
-                {
-                    Name = "AnotherRole"
-                });
+        await userManager.AddToRoleAsync(newUser, "Admin");
+        await userManager.AddToRoleAsync(newUser, "AnotherRole");
 
-                await userManager.AddToRoleAsync(newUser, "Admin");
-                await userManager.AddToRoleAsync(newUser, "AnotherRole");
+    }
+    else
+    {
+        logger.LogInformation("-->We already have identity data");
+    }
 
-            }
-            else
-            {
-                logger.LogInformation("-->We already have identity data");
-            }
-        }
+}
+
+
+        // private async static void SeedIdentityData(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, ILogger<Program> logger)
+        // {
+        //     if (!userManager.Users.Any())
+        //     {
+        //         logger.LogInformation("Creating test user");
+
+        //         var newUser = new User
+        //         {
+        //             Email = "mcastelan@rapidpay.com",
+        //             FirstName = "Test",
+        //             LastName = "User",
+        //             UserName = "mcastelan.rapidpay"
+        //         };
+
+        //         await userManager.CreateAsync(newUser, "P@55.W0rd");
+        //         await roleManager.CreateAsync(new IdentityRole
+        //         {
+        //             Name = "Admin"
+        //         });
+        //         await roleManager.CreateAsync(new IdentityRole
+        //         {
+        //             Name = "AnotherRole"
+        //         });
+
+        //         await userManager.AddToRoleAsync(newUser, "Admin");
+        //         await userManager.AddToRoleAsync(newUser, "AnotherRole");
+
+        //     }
+        //     else
+        //     {
+        //         logger.LogInformation("-->We already have identity data");
+        //     }
+        // }
 
         private static void SeedBankAccountData(AppDbContext context, ILogger<Program> logger)
         {

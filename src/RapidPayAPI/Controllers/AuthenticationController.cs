@@ -41,7 +41,7 @@ namespace RapidPayAPI.Controllers
                 return BadRequest("Invalid login attempt");
             }
 
-           
+            //throw new Exception("Exception while fetching the user from the storage.");
                 
             var roles = await _userManager.GetRolesAsync(user);
 
