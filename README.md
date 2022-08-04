@@ -1,4 +1,4 @@
-# RapidPayAPI
+# RapidPayAPI (Challenge)
 ## Goal
 
 RapidPay as a payment provider needs YOU to develop its new Authorization system and is willing to
