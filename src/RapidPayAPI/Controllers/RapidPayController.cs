@@ -75,7 +75,7 @@ namespace RapidPayAPI.Controllers
         }
 
         [HttpPost()]
-        public async Task<ActionResult<BankAccountReadDto>> CreateBankAccount(BankAccountCreateDto bankAccountCreateDto)
+        public async Task<ActionResult<BankAccountReadDto>> CreateBankAccount([FromBody] BankAccountCreateDto bankAccountCreateDto)
         {
             var bankAccount = _mapper.Map<BankAccount>(bankAccountCreateDto);
             if(!_repository.CardNumberExists(bankAccount.CardNumber))
@@ -95,7 +95,7 @@ namespace RapidPayAPI.Controllers
         }
 
         [HttpPut("{bankaccountid}")]
-        public async Task<ActionResult> Pay(int bankaccountid, BankAccountPayDto bankAccountPayDto)
+        public async Task<ActionResult> Pay(int bankaccountid, [FromBody] BankAccountPayDto bankAccountPayDto)
         {
            
            var paymentHistory = new PaymentHistory(); 
